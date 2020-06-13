@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>مدیریت ترافیک</title>
+    <link rel="stylesheet" href="bootstrap.css">
+    <link rel="stylesheet" href="bootstrap-grid.css">
+    <link rel="stylesheet" href="bootstrap-reboot.css">
+    <link rel="stylesheet" href="bootstrap-rtl.min.css">
+    <script src="Chart.min.js"></script>
+    <style>
+        .w-200 {
+            width: 200%;
+        }
+
+        .w-96 {
+            width: 96%;
+        }
+    </style>
+</head>
+<body>
+<div class="row w-96 m-2">
+    <div class="col-lg-12">
+        <p>
+            لیست حسگرهای موجود
+        </p>
+        <ul class="list-group">
+            <li class="list-group-item">بزرگراه مدرس<span class="badge float-right">۱</span></li>
+            <li class="list-group-item active">بزرگراه همت<span class="badge float-right">۰</span></li>
+            <li class="list-group-item">بزرگراه امام علی<span class="badge float-right">۱</span></li>
+            <li class="list-group-item disabled">بزرگراه نیایش<span class="badge float-right">۱۰۰</span></li>
+            <li class="list-group-item active">بزرگراه چمران<span class="badge float-right">۰</span></li>
+            <li class="list-group-item">بزرگراه حکیم<span class="badge float-right">۱</span></li>
+            <li class="list-group-item">بزرگراه آزادگان<span class="badge float-right">۱</span></li>
+        </ul>
+    </div>
+</div>
+<div class="row w-96 m-2">
+    <div class="col-6">
+        <div class="form-group">
+            <label for="traffic-highway">ترافیک</label>
+            <select class="form-control" id="traffic-highway">
+                <option>بزرگراه مدرس</option>
+                <option>بزرگراه همت</option>
+                <option>بزرگراه امام علی</option>
+                <option>بزرگراه نیایش</option>
+                <option>بزرگراه چمران</option>
+                <option>بزرگراه حکیم</option>
+                <option>بزرگراه آزادگان</option>
+            </select>
+        </div>
+        <canvas id="traffic-highway-chart"></canvas>
+    </div>
+    <div class="col-6">
+        <canvas id="weather-chart"></canvas>
+    </div>
+</div>
+<div class="row w-96 m-2">
+    <div class="col-lg-6">
+        <iframe width="100%"
+                height="200%"
+                src="https://api.maptiler.com/maps/streets/?key=ptRri5SRXyugsx5Bdomf#14.0/35.6779/51.4068"
+                title="نقشه انلاین ترافیک"></iframe>
+    </div>
+    <div class="col-lg-6">
+        <div class="alert-danger mt-1">
+            یک ماشین مقابل بیمارستان بوق زد
+        </div>
+        <div class="alert-warning mt-1">
+            یک تصادف در بزرگراه شهید همت
+        </div>
+        <div class="alert-danger mt-1">
+            ترافیک سنگین در بزرگراه شهید مدرس
+        </div>
+        <div class="alert-info mt-1">
+            ترافیک سبک در بزرگراه حکیم
+        </div>
+    </div>
+</div>
+<script>
+    function dateToStr(date) {
+        return String(date.getHours()) + ':' + String(date.getMinutes());
+    }
+
+    let trafficCtx = document.getElementById('traffic-highway-chart').getContext('2d');
+    let weatherCtx = document.getElementById('weather-chart').getContext('2d');
+    let today = new Date();
+    let oneMinuteBefore = new Date(today.getTime() - 60000);
+    let twoMinuteBefore = new Date(today.getTime() - 120000);
+    let threeMinuteBefore = new Date(today.getTime() - 180000);
+    let fourMinuteBefore = new Date(today.getTime() - 240000);
+    let fiveMinuteBefore = new Date(today.getTime() - 300000);
+    let trafficChart = new Chart(trafficCtx, {
+        type: 'line',
+        data: {
+            labels: [
+                dateToStr(fiveMinuteBefore),
+                dateToStr(fourMinuteBefore),
+                dateToStr(threeMinuteBefore),
+                dateToStr(twoMinuteBefore),
+                dateToStr(oneMinuteBefore),
+                dateToStr(today)
+            ],
+            datasets: [{
+                label: 'تعداد ماشین / ۱۰۰۰',
+                data: [12, 15, 3, 5, 2, 7],
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    let weatherChart = new Chart(weatherCtx, {
+        type: 'line',
+        data: {
+            labels: [
+                dateToStr(fiveMinuteBefore),
+                dateToStr(fourMinuteBefore),
+                dateToStr(threeMinuteBefore),
+                dateToStr(twoMinuteBefore),
+                dateToStr(oneMinuteBefore),
+                dateToStr(today)
+            ],
+            datasets: [
+                {
+                    label: 'درجه حرارت هوای امروز',
+                    data: [20, 21, 20, 20, 19, 20],
+                }
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    })
+</script>
+</body>
+</html>
